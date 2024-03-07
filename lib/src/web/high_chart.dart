@@ -146,8 +146,7 @@ class HighChartsState extends State<HighCharts> {
 
   void _load() {
     Future.delayed(const Duration(milliseconds: 250), () {
-      eval("Highcharts.setOptions(${widget.globalOptions});");
-      eval("Highcharts.chart('$_highChartsId',${widget.data});");
+      eval("Highcharts.setOptions(${widget.globalOptions}); Highcharts.chart('$_highChartsId',${widget.data});");
     });
   }
 }
