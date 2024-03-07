@@ -14,7 +14,8 @@ class HighCharts extends StatefulWidget {
       required this.size,
       this.loader = const Center(child: CircularProgressIndicator()),
       this.scripts = const [],
-      super.key});
+      super.key,
+      required this.globalOptions});
 
   ///Custom `loader` widget, until script is loaded
   ///
@@ -59,6 +60,8 @@ class HighCharts extends StatefulWidget {
   ///
   ///Reference: [High Charts API](https://api.highcharts.com/highcharts)
   final String data;
+
+  final String globalOptions;
 
   ///Chart size
   ///
@@ -125,14 +128,12 @@ class HighChartsState extends State<HighCharts> {
 
     if (_controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
-      (_controller.platform as AndroidWebViewController)
-          .setMediaPlaybackRequiresUserGesture(false);
+      (_controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
       AndroidWebViewController.enableDebugging(kDebugMode);
     }
 
     if (_controller.platform is WebKitWebViewController) {
-      WebKitWebViewController webKitWebViewController =
-          _controller.platform as WebKitWebViewController;
+      WebKitWebViewController webKitWebViewController = _controller.platform as WebKitWebViewController;
       webKitWebViewController.setInspectable(kDebugMode);
     }
 
@@ -162,9 +163,7 @@ class HighChartsState extends State<HighCharts> {
 
   @override
   void didUpdateWidget(covariant HighCharts oldWidget) {
-    if (oldWidget.data != widget.data ||
-        oldWidget.size != widget.size ||
-        oldWidget.scripts != widget.scripts) {
+    if (oldWidget.data != widget.data || oldWidget.size != widget.size || oldWidget.scripts != widget.scripts) {
       _controller.loadHtmlString(_htmlContent());
     }
     super.didUpdateWidget(oldWidget);
@@ -178,10 +177,7 @@ class HighChartsState extends State<HighCharts> {
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.expand,
-        children: [
-          !_isLoaded ? widget.loader : const SizedBox.shrink(),
-          WebViewWidget(controller: _controller)
-        ],
+        children: [!_isLoaded ? widget.loader : const SizedBox.shrink(), WebViewWidget(controller: _controller)],
       ),
     );
   }
@@ -203,8 +199,8 @@ class HighChartsState extends State<HighCharts> {
       setState(() {
         _isLoaded = true;
       });
-      _controller.runJavaScriptReturningResult(
-          "senthilnasa(`Highcharts.chart('highChartsDiv',${widget.data} )`);");
+      _controller.runJavaScriptReturningResult("senthilnasa(`Highcharts.setOptions(${widget.globalOptions})`);");
+      _controller.runJavaScriptReturningResult("senthilnasa(`Highcharts.chart('highChartsDiv',${widget.data} )`);");
     }
   }
 }
