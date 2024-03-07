@@ -199,8 +199,8 @@ class HighChartsState extends State<HighCharts> {
       setState(() {
         _isLoaded = true;
       });
-      _controller.runJavaScriptReturningResult("senthilnasa(`Highcharts.setOptions(${widget.globalOptions})`);");
-      _controller.runJavaScriptReturningResult("senthilnasa(`Highcharts.chart('highChartsDiv',${widget.data} )`);");
+      _controller.runJavaScriptReturningResult(
+          "senthilnasa(`Highcharts.chart('highChartsDiv',${widget.data} )`); senthilnasa(`Highcharts.setOptions(${widget.globalOptions})`);");
     }
   }
 }
