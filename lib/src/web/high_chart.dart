@@ -15,7 +15,8 @@ class HighCharts extends StatefulWidget {
       required this.size,
       this.loader = const CircularProgressIndicator(),
       this.scripts = const [],
-      super.key});
+      super.key,
+      required this.globalOptions});
 
   ///Custom `loader` widget, until script is loaded
   ///
@@ -61,6 +62,8 @@ class HighCharts extends StatefulWidget {
   ///Reference: [High Charts API](https://api.highcharts.com/highcharts)
   final String data;
 
+  final String globalOptions;
+
   ///Chart size
   ///
   ///Height and width of the chart is required
@@ -104,8 +107,7 @@ class HighCharts extends StatefulWidget {
 }
 
 class HighChartsState extends State<HighCharts> {
-  final String _highChartsId =
-      "HighChartsId${Random().nextInt(900000) + 100000}";
+  final String _highChartsId = "HighChartsId${Random().nextInt(900000) + 100000}";
 
   @override
   void didUpdateWidget(covariant HighCharts oldWidget) {
@@ -144,6 +146,7 @@ class HighChartsState extends State<HighCharts> {
 
   void _load() {
     Future.delayed(const Duration(milliseconds: 250), () {
+      eval("Highcharts.setOptions(${widget.globalOptions});");
       eval("Highcharts.chart('$_highChartsId',${widget.data});");
     });
   }
